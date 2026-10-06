@@ -50,7 +50,7 @@ def updated_formula(content, url, version, checksum):
         content, count = re.subn(rf'^  {key} "[^"]+"$', f'  {key} "{value}"', content, count=1, flags=re.M)
         if count != 1:
             raise ValueError(f"Expected one {key} in formula")
-    # Timeclock's tag includes a component prefix, so its formula states the version.
+    # Keep an explicit version in sync if a formula needs one.
     content = re.sub(r'^  version "[^"]+"$', f'  version "{version}"', content, count=1, flags=re.M)
     return content
 
