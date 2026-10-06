@@ -48,8 +48,11 @@ jobs:
           if [ "$(gh pr list --head "$branch" --state open --json number --jq length)" = 0 ]; then
             gh pr create --base main --head "$branch" \
               --title "chore: update formulae to latest stable releases" \
-              --body "Updates tagged source URLs and SHA-256 checksums from the latest stable upstream releases. Source installations and formula tests run on macOS and Linux before review."
+              --body "Updates tagged source URLs and SHA-256 checksums from the latest stable upstream releases. This PR merges automatically after source installations and formula tests pass on macOS and Linux. Failed checks leave it open."
           fi
           # PRs made with GITHUB_TOKEN do not trigger pull_request workflows.
           # Explicit workflow_dispatch does, without a cross-repository secret.
           gh workflow run test.yml --ref "$branch"
+          # main requires both platform checks. GitHub waits for them, and
+          # --match-head-commit prevents enabling a merge for a changed head.
+          gh pr merge "$branch" --auto --squash --match-head-commit "$(git rev-parse HEAD)"
