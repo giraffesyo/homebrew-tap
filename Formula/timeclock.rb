@@ -35,7 +35,8 @@ class Timeclock < Formula
     end
     server.close
     ENV["TIMECLOCK_TOKEN"] = "formula-test-token"
-    output = shell_output("#{bin}/timeclock --server http://127.0.0.1:#{port} --timeout 5s api me")
+    ENV["TIMECLOCK_URL"] = "http://127.0.0.1:#{port}"
+    output = shell_output("#{bin}/timeclock --timeout 5s api me")
     assert_equal "formula-test", JSON.parse(output)["id"]
   ensure
     Process.kill("TERM", pid) if pid
