@@ -34,7 +34,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           if git diff --quiet -- Formula; then
-            echo "Both formulae are current."
+            echo "All formulae are current."
             exit 0
           fi
           branch=automation/formula-updates

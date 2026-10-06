@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = {
     "timeclock": ("timeclock-v", "cmd/timeclock/main.go"),
     "understudy": ("v", "cmd/understudy/main.go"),
+    "ingot": ("v", "cmd/ingot/main.go"),
 }
 
 
