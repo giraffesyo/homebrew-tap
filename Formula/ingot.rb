@@ -1,8 +1,8 @@
 class Ingot < Formula
   desc "Pure-Go ONNX inference runtime for CNNs, transformers, OCR and generative models"
   homepage "https://github.com/giraffesyo/ingot"
-  url "https://github.com/giraffesyo/ingot/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "2a42756a99ffb90772d525b860edd9a9109ee3beefc8763adbe210daead154ae"
+  url "https://github.com/giraffesyo/ingot/archive/refs/tags/v0.1.1.tar.gz"
+  sha256 "3d15969c1a4ec0c41886614b2d347bed34d824e212f007848a3abdf6fc4051e7"
   license "Apache-2.0"
   head "https://github.com/giraffesyo/ingot.git", branch: "canary"
 
