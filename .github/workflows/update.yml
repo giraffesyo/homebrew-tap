@@ -1,0 +1,55 @@
+name: Update releases
+
+on:
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: update-releases
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.13"
+      - run: python3 -m unittest discover -s scripts -v
+      - name: Find new stable releases and verify source checksums
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/update.py
+      - name: Open or refresh the version update PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- Formula; then
+            echo "Both formulae are current."
+            exit 0
+          fi
+          branch=automation/formula-updates
+          git fetch origin "refs/heads/$branch:refs/remotes/origin/$branch" || true
+          git switch -C "$branch"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula
+          git commit -m "chore: update formulae to latest stable releases"
+          git push --force-with-lease origin "$branch"
+          if [ "$(gh pr list --head "$branch" --state open --json number --jq length)" = 0 ]; then
+            gh pr create --base main --head "$branch" \
+              --title "chore: update formulae to latest stable releases" \
+              --body "Updates tagged source URLs and SHA-256 checksums from the latest stable upstream releases. Source installations and formula tests run on macOS and Linux before review."
+          fi
+          # PRs made with GITHUB_TOKEN do not trigger pull_request workflows.
+          # Explicit workflow_dispatch does, without a cross-repository secret.
+          gh workflow run test.yml --ref "$branch"

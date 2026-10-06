@@ -1,0 +1,48 @@
+name: Formula tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: formula-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  install:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: Homebrew/actions/setup-homebrew@dc7099b3e807f1e2ecc61f3ecabc840eedd5586a
+        with:
+          stable: true
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.13"
+      - name: Check release updater
+        run: python3 -m unittest discover -s scripts -v
+      - name: Check formula style
+        run: brew style giraffesyo/tap
+      - name: Build and test formulae from source
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: "1"
+          HOMEBREW_NO_INSTALL_CLEANUP: "1"
+        run: |
+          for path in Formula/*.rb; do
+            formula=$(basename "$path" .rb)
+            brew install --build-from-source "giraffesyo/tap/$formula"
+            brew test "giraffesyo/tap/$formula"
+            brew audit --strict "giraffesyo/tap/$formula"
+          done
