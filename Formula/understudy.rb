@@ -1,8 +1,8 @@
 class Understudy < Formula
   desc "Ansible-compatible automation engine written in Go"
   homepage "https://github.com/giraffesyo/understudy"
-  url "https://github.com/giraffesyo/understudy/archive/refs/tags/v0.2.1.tar.gz"
-  sha256 "8ecf458b116a976a6a9ec791ce68372c990c45fecf20fa3b70b0e29c7233d716"
+  url "https://github.com/giraffesyo/understudy/archive/refs/tags/v0.2.3.tar.gz"
+  sha256 "a2cfdcc07948b1333624e3695a5166e5c25a721dc79acfcb3f3fb38666ba72eb"
   license "Apache-2.0"
   head "https://github.com/giraffesyo/understudy.git", branch: "canary"
 
