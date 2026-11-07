@@ -1,8 +1,8 @@
 class Timeclock < Formula
   desc "Track time, manage timesheets, and export reports from your terminal"
   homepage "https://github.com/giraffesyo/timeclock"
-  url "https://github.com/giraffesyo/timeclock/archive/refs/tags/timeclock-v0.9.0.tar.gz"
-  sha256 "30ff702dda78f9de5d2b6f88d1ee27dfd1d170355aad3871bc10e6efd84281b0"
+  url "https://github.com/giraffesyo/timeclock/archive/refs/tags/timeclock-v0.27.6.tar.gz"
+  sha256 "f9866bc1b42e4cdfc516efdb101e8fa6223d8769084855cbc3f49db6306e49a3"
   license "Apache-2.0"
   head "https://github.com/giraffesyo/timeclock.git", branch: "canary"
 
